@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="whole" style="padding: 20px;
+    display: inline-block;
+    margin-left: 446px;">
+        <input id="text" style="width :500px"></input>
+        <div id="buttons" style=" display: flex; padding: 10px 176px;">
+            <button onClick="saveItem()" type="submit" class="btn btn-outline-success">Save</button>
+            <div id="removediv" style="padding: 0px 10px;"><button type="submit" onClick="remove()"
+                    class="btn btn-outline-danger">Remove</button></div>
+        </div>
+        <div><label id="heading">Content of Local Storage</label></div>
+
+        <div id="selected-div">
+            <label id="display" style="padding: 10px 30px 10px 0px;"></label>
+            <div id="editbutton" style="padding: 10px;"></div>
+        </div>
+    </div>
+
+</body>
+<script>
+    window.onload = function () {
+        displayItem();
+    };
+
+    function saveItem() {
+        let input = document.getElementById("text").value;
+        // console.log(input);
+
+        let localStorageValue = JSON.parse(localStorage.getItem("data"));
+
+        localStorageValue = localStorageValue ? localStorageValue : [];
+        //push stores data in array 
+        localStorageValue.push(input);
+        localStorage.setItem("data", JSON.stringify(localStorageValue));
+        // displayItem();
+
+        let rel1 = document.getElementById("heading");
+        rel1.innerHTML = " Content of Local Storage";
+
+        let rel = document.getElementById("display");
+        const inputEl = document.createElement("p");
+        inputEl.setAttribute("id", "Ptag")
+
+
+        const spantag = document.createElement("span");
+        spantag.setAttribute("id", "Stag");
+        spantag.innerHTML = input;
+        inputEl.appendChild(spantag);
+
+        const node = document.createElement("button");
+        var textnode = document.createTextNode("Edit");
+        node.setAttribute("id", "selected-button")
+        node.appendChild(textnode);
+
+        const deleteNode = document.createElement("button");
+        var deleteText = document.createTextNode("Delete");
+        deleteNode.appendChild(deleteText);
+
+        const resaveNode = document.createElement("button");
+        var resaveText = document.createTextNode("Resave");
+        resaveNode.appendChild(resaveText);
+
+        document.getElementById("text").value = "";
+
+
+        // inputEl.innerHTML = input;
+        // this  append line is printing the saved content (display work)
+        rel.append(inputEl);
+        // inputEl.append(spantag);
+        inputEl.append(node);
+        inputEl.append(deleteNode);
+        inputEl.appendChild(resaveNode);
+
+
+
+        node.addEventListener('click', function () {
+            editOption(event);
+        });
+
+
+        deleteNode.addEventListener('click', function () {
+            deleteOption(event);
+        });
+
+
+        if (document.getElementById("text") !== "") {
+
+            if (editOption(event)) {
+
+                resaveNode.addEventListener('click', function () {
+                    resaveOption(event);
+                })
+
+            }
+        }
+
+    }
+
+    function resaveOption(event) {
+        if (document.getElementById("text").value != '') {
+            var x = document.getElementById("text").value
+            event.target.parentNode.querySelector("#Stag").innerHTML = x;
+            document.getElementById("text").value = "";
+        }
+
+    }
+
+    function deleteOption(event) {
+        // console.log(event.target.parentNode);
+        const data = JSON.parse(localStorage.getItem('data'));
+        console.log(data);
+        const textToDel = event.target.parentNode.querySelector('span').innerHTML
+        console.log(textToDel);
+        const indexToDel = data.indexOf(textToDel);
+        console.log(indexToDel);
+        data.splice(indexToDel, 1);
+        localStorage.setItem('data', JSON.stringify(data))
+
+
+        // console.log(y);
+        event.target.parentNode.remove();
+        document.getElementById("text").innerHTML = "";
+
+
+
+        //  event.target.parentNode.querySelector("#Stag").innerHTML="";
+
+        // localStorage.removeItem("hello");
+
+    }
+    function editOption(event) {
+
+        // var wTile = event.target.parentNode;
+        const x = event.target.parentNode.querySelector("#Stag").innerHTML;
+        document.getElementById("text").value = x;
+
+        // alert(todoText);
+
+        // var x= document.getElementById("Stag").innerHTML;
+        // document.getElementById("text").value=x;
+
+
+
+    }
+    function remove() {
+        localStorage.removeItem("data");
+        console.clear();
+
+        let rel = document.getElementById("display");
+        rel.innerHTML = "";
+
+
+        let rel1 = document.getElementById("heading");
+        rel1.innerHTML = "Removed successfully";
+
+
+
+
+    }
+    function displayItem() {
+
+        let getInput = JSON.parse(localStorage.getItem("data"));
+        // console.log(getInput);
+        let rel = document.getElementById("display");
+        getInput.forEach(note => {
+            const noteEl = document.createElement("p");
+            noteEl.innerHTML = note;
+
+            const node = document.createElement("button");
+            var textnode = document.createTextNode("Edit");
+            node.setAttribute("id", "selected-button")
+            node.appendChild(textnode);
+
+            const deleteNode = document.createElement("button");
+            var deleteText = document.createTextNode("Delete");
+            deleteNode.appendChild(deleteText);
+
+            const resaveNode = document.createElement("button");
+            var resaveText = document.createTextNode("Resave");
+            resaveNode.appendChild(resaveText);
+
+
+            rel.append(noteEl);
+            noteEl.append(node);
+            noteEl.append(deleteNode);
+            noteEl.appendChild(resaveNode);
+
+
+
+
+        });
+    }
+</script>
+
+</html>
